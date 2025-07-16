@@ -54,32 +54,36 @@ st.subheader("🎞️ Titles by Type")
 fig1, ax1 = plt.subplots()
 sns.countplot(data=filtered_df, x='type', palette='pastel', ax=ax1)
 ax1.set_title("Number of Titles by Type")
-st.pyplot(fig1)
 st.markdown("""💡 **Insight:** Netflix’s catalog is predominantly composed of movies, reflecting a content strategy focused on one-off productions.""")
+st.pyplot(fig1)
+
 
 st.subheader("📅 Titles Released Over Time")
 fig2, ax2 = plt.subplots()
 filtered_df['release_year'].value_counts().sort_index().plot(kind='line', ax=ax2)
 ax2.set_title("Titles Released per Year")
+st.markdown("""💡 **Insight:** There was steady growth in releases until 2019, with a slight drop in 2020 likely due to COVID-19 production delays.""")
 ax2.set_xlabel("Year")
 ax2.set_ylabel("Count")
 st.pyplot(fig2)
-st.markdown("""💡 **Insight:** There was steady growth in releases until 2019, with a slight drop in 2020 likely due to COVID-19 production delays.""")
+
 
 st.subheader("🌍 Top 10 Countries")
 fig3, ax3 = plt.subplots()
 top_countries = filtered_df['country'].dropna().str.split(', ').explode().value_counts().head(10)
 sns.barplot(x=top_countries.values, y=top_countries.index, palette='Blues_r', ax=ax3)
 ax3.set_title("Top Countries by Content Count")
-st.pyplot(fig3)
 st.markdown("""💡 **Insight:** The United States dominates Netflix's content library, but India and the UK are also major contributors.""")
+st.pyplot(fig3)
+
 
 st.subheader("🏷️ Rating Distribution")
 fig4, ax4 = plt.subplots()
 sns.countplot(y='rating', data=filtered_df, order=filtered_df['rating'].value_counts().index, palette='viridis', ax=ax4)
 ax4.set_title("Rating Distribution")
-st.pyplot(fig4)
 st.markdown("""💡 **Insight:** TV-MA and TV-14 are the most common ratings, indicating content is mainly aimed at teens and adults.""")
+st.pyplot(fig4)
+
 
 if 'duration_minutes' in filtered_df.columns and filtered_df['type'].str.contains('Movie').any():
     st.subheader("⏱️ Movie Duration Distribution")
