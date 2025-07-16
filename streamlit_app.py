@@ -17,7 +17,7 @@ st.markdown("Analyze and visualize Netflix's catalog by type, country, genre, ra
 @st.cache_data
 def load_data():
     df = pd.read_csv("netflix_titles.csv")
-    df['date_added'] = pd.to_datetime(df['date_added'], errors='coerce""")
+    df['date_added'] = pd.to_datetime(df['date_added'], errors='coerce')
     df['duration_minutes'] = df['duration'].apply(lambda d: int(re.search(r'\d+', d).group()) if pd.notnull(d) and 'min' in d else np.nan)
     df['num_seasons'] = df['duration'].apply(lambda d: int(re.search(r'\d+', d).group()) if pd.notnull(d) and 'Season' in d else np.nan)
     return df
@@ -27,8 +27,8 @@ df = load_data()
 # Sidebar filters
 st.sidebar.header("📊 Filters")
 types = st.sidebar.multiselect("Select Type", options=df['type'].unique(), default=df['type'].unique())
-countries = st.sidebar.multiselect("Select Country", options=sorted(set(df['country'].dropna().str.split(', """).explode())), default=None)
-genres = st.sidebar.multiselect("Select Genre", options=sorted(set(df['listed_in'].dropna().str.split(', """).explode())), default=None)
+countries = st.sidebar.multiselect("Select Country", options=sorted(set(df['country'].dropna().str.split(', ').explode())), default=None)
+genres = st.sidebar.multiselect("Select Genre", options=sorted(set(df['listed_in'].dropna().str.split(', ').explode())), default=None)
 ratings = st.sidebar.multiselect("Select Rating", options=sorted(df['rating'].dropna().unique()), default=None)
 year_range = st.sidebar.slider("Select Release Year Range", int(df['release_year'].min()), int(df['release_year'].max()), (2010, 2021))
 
@@ -68,20 +68,20 @@ st.markdown("""💡 **Insight:** There was steady growth in releases until 2019,
 
 st.subheader("🌍 Top 10 Countries")
 fig3, ax3 = plt.subplots()
-top_countries = filtered_df['country'].dropna().str.split(', """).explode().value_counts().head(10)
+top_countries = filtered_df['country'].dropna().str.split(', ').explode().value_counts().head(10)
 sns.barplot(x=top_countries.values, y=top_countries.index, palette='Blues_r', ax=ax3)
 ax3.set_title("Top Countries by Content Count")
 st.pyplot(fig3)
-st.markdown("""💡 **Insight:** The United States dominates Netflix's content library, but India and the UK are also major contributors.""")
+st.markdown('💡 **Insight:** The United States dominates Netflix's content library, but India and the UK are also major contributors.')
 
 st.subheader("🏷️ Rating Distribution")
 fig4, ax4 = plt.subplots()
 sns.countplot(y='rating', data=filtered_df, order=filtered_df['rating'].value_counts().index, palette='viridis', ax=ax4)
 ax4.set_title("Rating Distribution")
 st.pyplot(fig4)
-st.markdown("""💡 **Insight:** TV-MA and TV-14 are the most common ratings, indicating content is mainly aimed at teens and adults.""")
+st.markdown('💡 **Insight:** TV-MA and TV-14 are the most common ratings, indicating content is mainly aimed at teens and adults.')
 
-if 'duration_minutes' in filtered_df.columns and filtered_df['type'].str.contains('Movie""").any():
+if 'duration_minutes' in filtered_df.columns and filtered_df['type'].str.contains('Movie').any():
     st.subheader("⏱️ Movie Duration Distribution")
     fig5, ax5 = plt.subplots()
     movie_durations = filtered_df[filtered_df['type'] == 'Movie']['duration_minutes'].dropna()
@@ -89,9 +89,9 @@ if 'duration_minutes' in filtered_df.columns and filtered_df['type'].str.contain
         sns.histplot(movie_durations, bins=30, kde=True, ax=ax5)
         ax5.set_title("Distribution of Movie Durations")
         st.pyplot(fig5)
-st.markdown("""💡 **Insight:** Most movies are between 80–120 minutes long, which aligns with standard feature film lengths.""")
+st.markdown('💡 **Insight:** Most movies are between 80–120 minutes long, which aligns with standard feature film lengths.')
 
-if 'num_seasons' in filtered_df.columns and filtered_df['type'].str.contains('TV Show""").any():
+if 'num_seasons' in filtered_df.columns and filtered_df['type'].str.contains('TV Show').any():
     st.subheader("📺 TV Show Seasons Count")
     fig6, ax6 = plt.subplots()
     tv_seasons = filtered_df[filtered_df['type'] == 'TV Show']['num_seasons'].dropna()
@@ -100,7 +100,7 @@ if 'num_seasons' in filtered_df.columns and filtered_df['type'].str.contains('TV
         ax6.set_title("Number of Seasons in TV Shows")
         ax6.set_xlabel("Seasons")
         st.pyplot(fig6)
-st.markdown("""💡 **Insight:** TV shows tend to have 1–2 seasons, showing Netflix’s preference for limited series or experimental runs.""")
+st.markdown('💡 **Insight:** TV shows tend to have 1–2 seasons, showing Netflix’s preference for limited series or experimental runs.')
 
 # Footer
 st.markdown("---")
